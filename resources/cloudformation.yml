@@ -12,7 +12,7 @@ Parameters:
     Default: laptar-ls
   GitHubRepoName:
     Type: String
-    Default: prjctr-aws
+    Default: projector-aws
   Subnet1:
     Type: AWS::EC2::Subnet::Id
     Default: subnet-07a49735496e5a18b
