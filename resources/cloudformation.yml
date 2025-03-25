@@ -26,13 +26,108 @@ Parameters:
     Type: AWS::EC2::VPC::Id
     Default: vpc-07abf5cb2f6a05900
 
+#Resources:
+#  SecurityGroup:
+#    Type: AWS::EC2::SecurityGroup
+#    Properties:
+#      GroupDescription: Allow HTTP traffic to the load balancer
+#      VpcId: !Ref VpcId
+#      SecurityGroupIngress:
+#        - IpProtocol: tcp
+#          FromPort: 80
+#          ToPort: 80
+#          CidrIp: 0.0.0.0/0
+#      SecurityGroupEgress:
+#        - IpProtocol: -1
+#          CidrIp: 0.0.0.0/0
+#
+#  NodeInstance1:
+#    Type: AWS::EC2::Instance
+#    Properties:
+#      ImageId: !Ref AMI
+#      InstanceType: !Ref InstanceType
+#      SecurityGroupIds:
+#        - !GetAtt SecurityGroup.GroupId
+#      SubnetId: !Ref Subnet1
+#      UserData:
+#        Fn::Base64: !Sub |
+#          #!/bin/bash
+#          yum update -y
+#          yum install -y nodejs git
+#          git clone https://github.com/${GitHubUsername}/${GitHubRepoName}.git /home/ec2-user/app
+#          cd /home/ec2-user/app
+#          npm install
+#          node server.js > server.log 2>&1 &
+#          echo "Node.js app started" >> server.log
+#
+#  NodeInstance2:
+#    Type: AWS::EC2::Instance
+#    Properties:
+#      ImageId: !Ref AMI
+#      InstanceType: !Ref InstanceType
+#      SecurityGroupIds:
+#        - !GetAtt SecurityGroup.GroupId
+#      SubnetId: !Ref Subnet2
+#      UserData:
+#        Fn::Base64: !Sub |
+#          #!/bin/bash
+#          yum update -y
+#          yum install -y nodejs git
+#          git clone https://github.com/${GitHubUsername}/${GitHubRepoName}.git /home/ec2-user/app
+#          cd /home/ec2-user/app
+#          npm install
+#          node server.js > server.log 2>&1 &
+#          echo "Node.js app started" >> server.log
+#
+#  LoadBalancer:
+#    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+#    Properties:
+#      Subnets:
+#        - !Ref Subnet1
+#        - !Ref Subnet2
+#      SecurityGroups:
+#        - !GetAtt SecurityGroup.GroupId
+#      Scheme: internet-facing
+#
+#  TargetGroup:
+#    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+#    Properties:
+#      Port: 80
+#      Protocol: HTTP
+#      VpcId: !Ref VpcId
+#      TargetType: instance
+#      Targets:
+#        - Id: !Ref NodeInstance1
+#          Port: 80
+#        - Id: !Ref NodeInstance2
+#          Port: 80
+#
+#  Listener:
+#    Type: AWS::ElasticLoadBalancingV2::Listener
+#    Properties:
+#      LoadBalancerArn: !Ref LoadBalancer
+#      Protocol: HTTP
+#      Port: 80
+#      DefaultActions:
+#        - Type: forward
+#          TargetGroupArn: !Ref TargetGroup
+#
+#Outputs:
+#  LoadBalancerURL:
+#    Description: "The URL of the Load Balancer"
+#    Value: !GetAtt LoadBalancer.DNSName
+
+
 Resources:
   SecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: Allow HTTP traffic to the load balancer
-      VpcId: !Ref VpcId
+      GroupDescription: Allow SSH and HTTP
       SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
         - IpProtocol: tcp
           FromPort: 80
           ToPort: 80
@@ -41,14 +136,13 @@ Resources:
         - IpProtocol: -1
           CidrIp: 0.0.0.0/0
 
-  NodeInstance1:
+  EC2Instance:
     Type: AWS::EC2::Instance
     Properties:
       ImageId: !Ref AMI
       InstanceType: !Ref InstanceType
       SecurityGroupIds:
-        - !GetAtt SecurityGroup.GroupId
-      SubnetId: !Ref Subnet1
+        - !Ref SecurityGroup
       UserData:
         Fn::Base64: !Sub |
           #!/bin/bash
@@ -59,60 +153,8 @@ Resources:
           npm install
           node server.js > server.log 2>&1 &
           echo "Node.js app started" >> server.log
-
-  NodeInstance2:
-    Type: AWS::EC2::Instance
-    Properties:
-      ImageId: !Ref AMI
-      InstanceType: !Ref InstanceType
-      SecurityGroupIds:
-        - !GetAtt SecurityGroup.GroupId
-      SubnetId: !Ref Subnet2
-      UserData:
-        Fn::Base64: !Sub |
-          #!/bin/bash
-          yum update -y
-          yum install -y nodejs git
-          git clone https://github.com/${GitHubUsername}/${GitHubRepoName}.git /home/ec2-user/app
-          cd /home/ec2-user/app
-          npm install
-          node server.js > server.log 2>&1 &
-          echo "Node.js app started" >> server.log
-
-  LoadBalancer:
-    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
-    Properties:
-      Subnets:
-        - !Ref Subnet1
-        - !Ref Subnet2
-      SecurityGroups:
-        - !GetAtt SecurityGroup.GroupId
-      Scheme: internet-facing
-
-  TargetGroup:
-    Type: AWS::ElasticLoadBalancingV2::TargetGroup
-    Properties:
-      Port: 80
-      Protocol: HTTP
-      VpcId: !Ref VpcId
-      TargetType: instance
-      Targets:
-        - Id: !Ref NodeInstance1
-          Port: 80
-        - Id: !Ref NodeInstance2
-          Port: 80
-
-  Listener:
-    Type: AWS::ElasticLoadBalancingV2::Listener
-    Properties:
-      LoadBalancerArn: !Ref LoadBalancer
-      Protocol: HTTP
-      Port: 80
-      DefaultActions:
-        - Type: forward
-          TargetGroupArn: !Ref TargetGroup
 
 Outputs:
-  LoadBalancerURL:
-    Description: "The URL of the Load Balancer"
-    Value: !GetAtt LoadBalancer.DNSName
+  InstancePublicIP:
+    Description: "Public IP address of the EC2 instance"
+    Value: !GetAtt EC2Instance.PublicIp
