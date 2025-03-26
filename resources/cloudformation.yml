@@ -30,51 +30,83 @@ Parameters:
     Default: unmodified-prjctr1
 
 Resources:
+#  S3Bucket:
+#    Type: AWS::S3::Bucket
+#    Properties:
+#      BucketName: !Ref BucketName
+#      BucketEncryption:
+#        ServerSideEncryptionConfiguration:
+#          - ServerSideEncryptionByDefault:
+#              SSEAlgorithm: AES256
+#      PublicAccessBlockConfiguration:
+#        BlockPublicAcls: true
+#        IgnorePublicAcls: true
+#        BlockPublicPolicy: true
+#        RestrictPublicBuckets: true
+#      ObjectLockEnabled: true
+#      ObjectLockConfiguration:
+#        ObjectLockEnabled: Enabled
+#        Rule:
+#          DefaultRetention:
+#            Mode: GOVERNANCE
+#            Days: 1
+#      LoggingConfiguration:
+#        DestinationBucketName: !Ref LogBucket
+#        LogFilePrefix: testing-logs
+#
+#  LogBucket:
+#    Type: AWS::S3::Bucket
+#    Properties:
+#      BucketName: !Sub "${BucketName}-logs"
+#
+#  S3BucketLoggingPolicy:
+#    Type: AWS::S3::BucketPolicy
+#    Properties:
+#      Bucket: !Ref LogBucket
+#      PolicyDocument:
+#        Version: "2012-10-17"
+#        Statement:
+#          - Sid: S3ServerAccessLogs
+#            Effect: Allow
+#            Principal:
+#              Service: logging.s3.amazonaws.com
+#            Action: s3:PutObject
+#            Resource: !Sub "arn:aws:s3:::${LogBucket}/*"
+#            Condition:
+#              ArnLike:
+#                "s3:prefix": !Sub "arn:aws:s3:::${LogBucket}/logs/${S3Bucket}/"
   S3Bucket:
-    Type: AWS::S3::Bucket
+    Type: 'AWS::S3::Bucket'
     Properties:
-      BucketName: !Ref BucketName
-      BucketEncryption:
-        ServerSideEncryptionConfiguration:
-          - ServerSideEncryptionByDefault:
-              SSEAlgorithm: AES256
-      PublicAccessBlockConfiguration:
-        BlockPublicAcls: true
-        IgnorePublicAcls: true
-        BlockPublicPolicy: true
-        RestrictPublicBuckets: true
-      ObjectLockEnabled: true
-      ObjectLockConfiguration:
-        ObjectLockEnabled: Enabled
-        Rule:
-          DefaultRetention:
-            Mode: GOVERNANCE
-            Days: 1
       LoggingConfiguration:
-        DestinationBucketName: !Ref LogBucket
+        DestinationBucketName: !Ref LoggingBucket
         LogFilePrefix: testing-logs
-
-  LogBucket:
-    Type: AWS::S3::Bucket
+  LoggingBucket:
+    Type: 'AWS::S3::Bucket'
+  S3BucketPolicy:
+    Type: 'AWS::S3::BucketPolicy'
     Properties:
-      BucketName: !Sub "${BucketName}-logs"
-
-  S3BucketLoggingPolicy:
-    Type: AWS::S3::BucketPolicy
-    Properties:
-      Bucket: !Ref LogBucket
+      Bucket: !Ref LoggingBucket
       PolicyDocument:
-        Version: "2012-10-17"
+        Version: 2012-10-17
         Statement:
-          - Sid: S3ServerAccessLogs
+          - Action:
+              - 's3:PutObject'
             Effect: Allow
             Principal:
               Service: logging.s3.amazonaws.com
-            Action: s3:PutObject
-            Resource: !Sub "arn:aws:s3:::${LogBucket}/*"
+            Resource: !Join
+              - ''
+              - - 'arn:aws:s3:::'
+                - !Ref LoggingBucket
+                - /*
             Condition:
               ArnLike:
-                "s3:prefix": !Sub "arn:aws:s3:::${LogBucket}/logs/${S3Bucket}/"
+                'aws:SourceArn': !GetAtt
+                  - S3Bucket
+                  - Arn
+              StringEquals:
+                'aws:SourceAccount': !Sub '${AWS::AccountId}'
 
   SecurityGroup:
     Type: AWS::EC2::SecurityGroup
