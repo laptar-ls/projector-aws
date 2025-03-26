@@ -50,6 +50,14 @@ Resources:
           DefaultRetention:
             Mode: GOVERNANCE
             Days: 1
+      LoggingConfiguration:
+        DestinationBucketName: !Ref LogBucket
+        LogFilePrefix: testing-logs
+
+  LogBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub "${BucketName}-logs"
 
   S3BucketLoggingPolicy:
     Type: AWS::S3::BucketPolicy
@@ -67,11 +75,6 @@ Resources:
             Condition:
               ArnLike:
                 "s3:prefix": !Sub "arn:aws:s3:::${LogBucket}/logs/${S3Bucket}/"
-
-  LogBucket:
-    Type: AWS::S3::Bucket
-    Properties:
-      BucketName: !Sub "${BucketName}-logs"
 
   SecurityGroup:
     Type: AWS::EC2::SecurityGroup
