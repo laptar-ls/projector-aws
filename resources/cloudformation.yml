@@ -28,16 +28,8 @@ Parameters:
   BucketName:
     Type: String
     Default: unmodified-prjctr1
-  LogBucket:
-    Type: String
-    Default: unmodified-prjctr-logs
 
 Resources:
-  LogBucket:
-    Type: AWS::S3::Bucket
-    Properties:
-      BucketName: !Ref LogBucket
-
   S3Bucket:
     Type: AWS::S3::Bucket
     Properties:
@@ -78,6 +70,11 @@ Resources:
             Condition:
               ArnLike:
                 "s3:prefix": !Sub "arn:aws:s3:::${LogBucket}/logs/${S3Bucket}/"
+
+  LogBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub "${BucketName}-logs"
 
   SecurityGroup:
     Type: AWS::EC2::SecurityGroup
