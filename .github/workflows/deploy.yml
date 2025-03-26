@@ -25,3 +25,4 @@ jobs:
             --stack-name projector-stack \
             --template-file resources/cloudformation.yml \
             --capabilities CAPABILITY_NAMED_IAM
+            --parameters ParameterKey=BucketName,ParameterValue="${{ secrets.S3_BUCKET_NAME }}"
