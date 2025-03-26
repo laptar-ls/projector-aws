@@ -27,7 +27,7 @@ Parameters:
     Default: vpc-07abf5cb2f6a05900
   BucketName:
     Type: String
-    Default: unmodified-prjctr
+    Default: unmodified-prjctr1
 
 Resources:
   S3Bucket:
@@ -44,13 +44,15 @@ Resources:
         BlockPublicPolicy: true
         RestrictPublicBuckets: true
       LoggingConfiguration:
-        LogFilePrefix: logs/
+        LoggingConfiguration:
+          TargetBucket: !Ref BucketName
+          LogFilePrefix: logs/
       ObjectLockEnabled: true
       ObjectLockConfiguration:
         ObjectLockEnabled: Enabled
         Rule:
           DefaultRetention:
-            Mode: COMPLIANCE
+            Mode: GOVERNANCE
             Days: 5
 
   SecurityGroup:
