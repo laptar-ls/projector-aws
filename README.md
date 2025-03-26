@@ -1,5 +1,5 @@
 # projector-aws
 
-![alt text](screenshot/loadBalancer.png)
+![alt text](screenshots/loadBalancer.png)
 
-![alt text](screenshot/response.png)
+![alt text](screenshots/response.png)
