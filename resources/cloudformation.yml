@@ -27,7 +27,6 @@ Parameters:
     Default: vpc-07abf5cb2f6a05900
   BucketName:
     Type: String
-    Default: "{{ secrets.S3_BUCKET_NAME }}"
 
 Resources:
   S3Bucket:
