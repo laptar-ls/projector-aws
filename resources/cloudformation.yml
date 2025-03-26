@@ -50,9 +50,6 @@ Resources:
           DefaultRetention:
             Mode: GOVERNANCE
             Days: 1
-      LoggingConfiguration:
-        TargetBucket: !Ref LogBucket
-        LogFilePrefix: logs/
 
   S3BucketLoggingPolicy:
     Type: AWS::S3::BucketPolicy
@@ -166,46 +163,3 @@ Outputs:
   S3BucketName:
     Description: "Name of the S3 bucket"
     Value: !Ref S3Bucket
-
-
-#Resources:
-#  SecurityGroup:
-#    Type: AWS::EC2::SecurityGroup
-#    Properties:
-#      GroupDescription: Allow SSH and HTTP
-#      VpcId: !Ref VpcId
-#      SecurityGroupIngress:
-##        - IpProtocol: tcp
-##          FromPort: 22
-##          ToPort: 22
-##          CidrIp: 0.0.0.0/0
-#        - IpProtocol: tcp
-#          FromPort: 80
-#          ToPort: 80
-#          CidrIp: 0.0.0.0/0
-#      SecurityGroupEgress:
-#        - IpProtocol: -1
-#          CidrIp: 0.0.0.0/0
-#
-#  EC2Node1:
-#    Type: AWS::EC2::Instance
-#    Properties:
-#      ImageId: !Ref AMI
-#      InstanceType: !Ref InstanceType
-#      SecurityGroupIds:
-#        - !Ref SecurityGroup
-#      UserData:
-#        Fn::Base64: !Sub |
-#          #!/bin/bash
-#          yum update -y
-#          yum install -y nodejs git
-#          git clone https://github.com/${GitHubUsername}/${GitHubRepoName}.git /home/ec2-user/app
-#          cd /home/ec2-user/app
-#          npm install
-#          node server.js > server.log 2>&1 &
-#          echo "Node.js app started" >> server.log
-#
-#Outputs:
-#  InstancePublicIP:
-#    Description: "Public IP address of the EC2 instance"
-#    Value: !GetAtt EC2Instance.PublicIp
