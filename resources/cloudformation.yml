@@ -28,8 +28,16 @@ Parameters:
   BucketName:
     Type: String
     Default: unmodified-prjctr1
+  LogBucket:
+    Type: String
+    Default: unmodified-prjctr-logs
 
 Resources:
+  LogBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref LogBucket
+
   S3Bucket:
     Type: AWS::S3::Bucket
     Properties:
@@ -43,17 +51,33 @@ Resources:
         IgnorePublicAcls: true
         BlockPublicPolicy: true
         RestrictPublicBuckets: true
-      LoggingConfiguration:
-        LoggingConfiguration:
-          TargetBucket: !Ref BucketName
-          LogFilePrefix: logs/
       ObjectLockEnabled: true
       ObjectLockConfiguration:
         ObjectLockEnabled: Enabled
         Rule:
           DefaultRetention:
             Mode: GOVERNANCE
-            Days: 5
+            Days: 1
+      LoggingConfiguration:
+        TargetBucket: !Ref LogBucket
+        LogFilePrefix: logs/
+
+  S3BucketLoggingPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref S3Bucket
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: S3ServerAccessLogs
+            Effect: Allow
+            Principal:
+              Service: logging.s3.amazonaws.com
+            Action: s3:PutObject
+            Resource: !Sub "arn:aws:s3:::${LogBucket}/*"
+            Condition:
+              ArnLike:
+                "s3:prefix": !Sub "arn:aws:s3:::${LogBucket}/logs/${S3Bucket}/"
 
   SecurityGroup:
     Type: AWS::EC2::SecurityGroup
@@ -142,6 +166,9 @@ Outputs:
   LoadBalancerURL:
     Description: "The URL of the Load Balancer"
     Value: !GetAtt LoadBalancer.DNSName
+  S3BucketName:
+    Description: "Name of the S3 bucket"
+    Value: !Ref S3Bucket
 
 
 #Resources:
