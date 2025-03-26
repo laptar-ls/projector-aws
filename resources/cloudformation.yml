@@ -75,38 +75,43 @@ Resources:
 #            Condition:
 #              ArnLike:
 #                "s3:prefix": !Sub "arn:aws:s3:::${LogBucket}/logs/${S3Bucket}/"
+  LoggingBucket:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: BucketOwnerPreferred
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+
   S3Bucket:
     Type: 'AWS::S3::Bucket'
+    DependsOn: LoggingBucket
     Properties:
       LoggingConfiguration:
         DestinationBucketName: !Ref LoggingBucket
         LogFilePrefix: testing-logs
-  LoggingBucket:
-    Type: 'AWS::S3::Bucket'
-  S3BucketPolicy:
+
+  LoggingBucketPolicy:
     Type: 'AWS::S3::BucketPolicy'
     Properties:
       Bucket: !Ref LoggingBucket
       PolicyDocument:
         Version: 2012-10-17
         Statement:
-          - Action:
-              - 's3:PutObject'
-            Effect: Allow
+          - Effect: Allow
             Principal:
-              Service: logging.s3.amazonaws.com
-            Resource: !Join
-              - ''
-              - - 'arn:aws:s3:::'
-                - !Ref LoggingBucket
-                - /*
+              AWS: arn:aws:iam::${AWS::AccountId}:root
+            Action:
+              - 's3:PutObject'
+              - 's3:PutObjectAcl'
+            Resource: !Sub 'arn:aws:s3:::${LoggingBucket}/*'
             Condition:
-              ArnLike:
-                'aws:SourceArn': !GetAtt
-                  - S3Bucket
-                  - Arn
               StringEquals:
-                'aws:SourceAccount': !Sub '${AWS::AccountId}'
+                's3:x-amz-acl': 'bucket-owner-full-control'
 
   SecurityGroup:
     Type: AWS::EC2::SecurityGroup
