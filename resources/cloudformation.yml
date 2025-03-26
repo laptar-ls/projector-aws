@@ -62,7 +62,7 @@ Resources:
   S3BucketLoggingPolicy:
     Type: AWS::S3::BucketPolicy
     Properties:
-      Bucket: !Ref S3Bucket
+      Bucket: !Ref LogBucket
       PolicyDocument:
         Version: "2012-10-17"
         Statement:
