@@ -37,15 +37,24 @@ Resources:
       PolicyDocument:
         Version: "2012-10-17"
         Statement:
-          - Sid: S3ServerAccessLogs
+          - Action:
+              - 's3:PutObject'
+              - 's3:PutObjectAcl'
             Effect: Allow
             Principal:
               Service: logging.s3.amazonaws.com
-            Action: s3:PutObject
-            Resource: !Sub "arn:aws:s3:::${LogBucket}/*"
+            Resource: !Join
+              - ''
+              - - 'arn:aws:s3:::'
+                - !Ref LogBucket
+                - /*
             Condition:
               ArnLike:
-                "s3:prefix": !Sub "arn:aws:s3:::${LogBucket}/logs/${S3Bucket}/"
+                'aws:SourceArn': !GetAtt
+                  - S3Bucket
+                  - Arn
+              StringEquals:
+                'aws:SourceAccount': !Sub '${AWS::AccountId}'
 
 #  S3Bucket:
 #    Type: 'AWS::S3::Bucket'
