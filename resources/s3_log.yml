@@ -3,7 +3,7 @@ AWSTemplateFormatVersion: '2010-09-09'
 Parameters:
   BucketName:
     Type: String
-    Default: prjctr
+    Default: prjctr-hw25
 
 Resources:
   S3Bucket:
