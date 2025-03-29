@@ -22,6 +22,8 @@ jobs:
       - name: Deploy CloudFormation Stack
         run: |
           aws cloudformation deploy \
-            --stack-name projector-stack1 \
-            --template-file resources/cloudformation.yml \
+            --stack-name ec2_lb \
+            --template-file resources/ec2_lb.yml \
+            --stack-name s3_log \
+            --template-file resources/s3_log.yml \
             --capabilities CAPABILITY_NAMED_IAM

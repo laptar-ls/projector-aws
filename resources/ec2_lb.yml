@@ -25,90 +25,8 @@ Parameters:
   VpcId:
     Type: AWS::EC2::VPC::Id
     Default: vpc-07abf5cb2f6a05900
-  BucketName:
-    Type: String
-    Default: unmodified-prjctr1
 
 Resources:
-#  S3Bucket:
-#    Type: AWS::S3::Bucket
-#    Properties:
-#      BucketName: !Ref BucketName
-#      BucketEncryption:
-#        ServerSideEncryptionConfiguration:
-#          - ServerSideEncryptionByDefault:
-#              SSEAlgorithm: AES256
-#      PublicAccessBlockConfiguration:
-#        BlockPublicAcls: true
-#        IgnorePublicAcls: true
-#        BlockPublicPolicy: true
-#        RestrictPublicBuckets: true
-#      ObjectLockEnabled: true
-#      ObjectLockConfiguration:
-#        ObjectLockEnabled: Enabled
-#        Rule:
-#          DefaultRetention:
-#            Mode: GOVERNANCE
-#            Days: 1
-#      LoggingConfiguration:
-#        DestinationBucketName: !Ref LogBucket
-#        LogFilePrefix: testing-logs
-#
-#  LogBucket:
-#    Type: AWS::S3::Bucket
-#    Properties:
-#      BucketName: !Sub "${BucketName}-logs"
-#
-#  S3BucketLoggingPolicy:
-#    Type: AWS::S3::BucketPolicy
-#    Properties:
-#      Bucket: !Ref LogBucket
-#      PolicyDocument:
-#        Version: "2012-10-17"
-#        Statement:
-#          - Sid: S3ServerAccessLogs
-#            Effect: Allow
-#            Principal:
-#              Service: logging.s3.amazonaws.com
-#            Action: s3:PutObject
-#            Resource: !Sub "arn:aws:s3:::${LogBucket}/*"
-#            Condition:
-#              ArnLike:
-#                "s3:prefix": !Sub "arn:aws:s3:::${LogBucket}/logs/${S3Bucket}/"
-  S3Bucket:
-    Type: 'AWS::S3::Bucket'
-    Properties:
-      LoggingConfiguration:
-        DestinationBucketName: !Ref LoggingBucket
-        LogFilePrefix: testing-logs
-  LoggingBucket:
-    Type: 'AWS::S3::Bucket'
-  S3BucketPolicy:
-    Type: 'AWS::S3::BucketPolicy'
-    Properties:
-      Bucket: !Ref LoggingBucket
-      PolicyDocument:
-        Version: 2012-10-17
-        Statement:
-          - Action:
-              - 's3:PutObject'
-              - 's3:PutObjectAcl'
-            Effect: Allow
-            Principal:
-              Service: logging.s3.amazonaws.com
-            Resource: !Join
-              - ''
-              - - 'arn:aws:s3:::'
-                - !Ref LoggingBucket
-                - /*
-            Condition:
-              ArnLike:
-                'aws:SourceArn': !GetAtt
-                  - S3Bucket
-                  - Arn
-              StringEquals:
-                'aws:SourceAccount': !Sub '${AWS::AccountId}'
-
   SecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
@@ -196,6 +114,3 @@ Outputs:
   LoadBalancerURL:
     Description: "The URL of the Load Balancer"
     Value: !GetAtt LoadBalancer.DNSName
-  S3BucketName:
-    Description: "Name of the S3 bucket"
-    Value: !Ref S3Bucket
