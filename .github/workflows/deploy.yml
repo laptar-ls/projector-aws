@@ -22,6 +22,6 @@ jobs:
       - name: Deploy CloudFormation Stack
         run: |
           aws cloudformation deploy \
-            --stack-name asg \
+            --stack-name asg2 \
             --template-file resources/asg.yml \
             --capabilities CAPABILITY_NAMED_IAM
