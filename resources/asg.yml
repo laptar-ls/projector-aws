@@ -20,7 +20,7 @@ Parameters:
   SpotInstanceType:
     Type: String
     Default: t2.micro
-  AMIId:
+  AMI:
     Type: String
     Default: ami-0b74f796d330ab49c
   GitHubUsername:
