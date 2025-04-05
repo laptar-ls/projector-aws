@@ -101,7 +101,8 @@ Resources:
           Overrides:
             - InstanceType: !Ref SpotInstanceType
 
-      TargetGroupARNs: []
+      TargetGroupARNs:
+        - !Ref TargetGroup
       MetricsCollection:
         - Granularity: "1Minute"
       HealthCheckType: EC2
