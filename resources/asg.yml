@@ -166,12 +166,12 @@ Resources:
       MetricAggregationType: Average
       StepAdjustments:
         - MetricIntervalLowerBound: 0
-          MetricIntervalUpperBound: 10
-          ScalingAdjustment: 100
-        - MetricIntervalLowerBound: 50
           MetricIntervalUpperBound: 100
           ScalingAdjustment: 100
-        - MetricIntervalLowerBound: 110
+        - MetricIntervalLowerBound: 100
+          MetricIntervalUpperBound: 500
+          ScalingAdjustment: 100
+        - MetricIntervalLowerBound: 500
           ScalingAdjustment: 100
 
   RequestCountAlarm:
@@ -186,7 +186,7 @@ Resources:
       Statistic: Sum
       Period: 60
       EvaluationPeriods: 1
-      Threshold: 10
+      Threshold: 100
       ComparisonOperator: GreaterThanOrEqualToThreshold
       AlarmActions:
         - !Ref RequestCountScalingPolicy
