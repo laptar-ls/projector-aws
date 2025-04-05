@@ -3,22 +3,32 @@ Description: "Auto Scaling Group with On-Demand base instance and Spot scaling"
 
 Parameters:
   VpcId:
-    Type: String
-    Description: "VPC ID"
-  SubnetIds:
-    Type: List<AWS::EC2::Subnet::Id>
-    Description: "List of Subnet IDs"
+    Type: AWS::EC2::VPC::Id
+    Default: vpc-07abf5cb2f6a05900
+  Subnet1:
+    Type: AWS::EC2::Subnet::Id
+    Default: subnet-07a49735496e5a18b
+  Subnet2:
+    Type: AWS::EC2::Subnet::Id
+    Default: subnet-0aba2dfb95814920f
+  Subnet3:
+    Type: AWS::EC2::Subnet::Id
+    Default: subnet-0712214530bc7d4b1
   InstanceType:
     Type: String
-    Default: "t3.micro"
-    Description: "EC2 Instance Type"
+    Default: t2.micro
   SpotInstanceType:
     Type: String
-    Default: "t3.micro"
-    Description: "EC2 Spot Instance Type"
+    Default: t2.micro
   AMIId:
     Type: String
-    Description: "AMI ID for instances"
+    Default: ami-0b74f796d330ab49c
+  GitHubUsername:
+    Type: String
+    Default: laptar-ls
+  GitHubRepoName:
+    Type: String
+    Default: projector-aws
 
 Resources:
   InstanceRole:
@@ -52,17 +62,30 @@ Resources:
       LaunchTemplateName: "AutoScalingTemplate"
       VersionDescription: "v1"
       LaunchTemplateData:
-        ImageId: !Ref AMIId
+        ImageId: !Ref AMI
         InstanceType: !Ref InstanceType
         IamInstanceProfile:
           Name: !Ref InstanceProfile
         SecurityGroupIds:
           - !Ref InstanceSecurityGroup
+        UserData:
+          Fn::Base64: !Sub |
+            #!/bin/bash
+            yum update -y
+            yum install -y nodejs git
+            git clone https://github.com/${GitHubUsername}/${GitHubRepoName}.git /home/ec2-user/app
+            cd /home/ec2-user/app
+            npm install
+            node server.js > server.log 2>&1 &
+            echo "Node.js app started" >> server.log
 
   AutoScalingGroup:
     Type: AWS::AutoScaling::AutoScalingGroup
     Properties:
-      VPCZoneIdentifier: !Ref SubnetIds
+      VPCZoneIdentifier:
+        - !Ref Subnet1
+        - !Ref Subnet2
+        - !Ref Subnet3
       MinSize: 1
       MaxSize: 10
       DesiredCapacity: 1
