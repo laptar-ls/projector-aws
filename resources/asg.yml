@@ -116,8 +116,6 @@ Resources:
         PredefinedMetricSpecification:
           PredefinedMetricType: ASGAverageCPUUtilization
         TargetValue: 50.0
-        ScaleInCooldown: 60
-        ScaleOutCooldown: 60
 
   ALB:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
