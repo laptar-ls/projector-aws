@@ -22,6 +22,6 @@ jobs:
       - name: Deploy CloudFormation Stack
         run: |
           aws cloudformation deploy \
-            --stack-name s3-log \
-            --template-file resources/s3_log.yml \
+            --stack-name asg \
+            --template-file resources/asg.yml \
             --capabilities CAPABILITY_NAMED_IAM
