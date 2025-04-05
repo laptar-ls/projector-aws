@@ -123,7 +123,10 @@ Resources:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
       Name: "AutoScalingALB"
-      Subnets: !Ref SubnetIds
+      Subnets:
+        - !Ref Subnet1
+        - !Ref Subnet2
+        - !Ref Subnet3
       SecurityGroups:
         - !Ref InstanceSecurityGroup
       Scheme: internet-facing
