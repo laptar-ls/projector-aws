@@ -168,10 +168,10 @@ Resources:
         - MetricIntervalLowerBound: 0
           MetricIntervalUpperBound: 500
           ScalingAdjustment: 100
-        - MetricIntervalLowerBound: 1000
-          MetricIntervalUpperBound: 1500
+        - MetricIntervalLowerBound: 500
+          MetricIntervalUpperBound: 1000
           ScalingAdjustment: 100
-        - MetricIntervalLowerBound: 1500
+        - MetricIntervalLowerBound: 1000
           ScalingAdjustment: 100
 
   RequestCountAlarm:
