@@ -11,3 +11,6 @@
 # HW-26
 ![alt text](screenshots/hw26_1.png)
 ![alt text](screenshots/hw26_2.png)
+
+# HW-27
+![alt text](screenshots/s3Converter.png)

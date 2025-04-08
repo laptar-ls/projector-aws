@@ -21,7 +21,7 @@ export const handler = async (event) => {
     const newKey = `converted-${baseName}.png`;
 
     const bmpImage = await sharp(originalImage)
-      .toFormat("bmp")
+      .toFormat("png")
       .toBuffer();
 
     const putObjectCommand = new PutObjectCommand({
