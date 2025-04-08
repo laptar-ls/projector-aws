@@ -22,6 +22,19 @@ jobs:
       - name: Deploy CloudFormation Stack
         run: |
           aws cloudformation deploy \
-            --stack-name asg2 \
-            --template-file resources/asg.yml \
+            --stack-name s3_zip \
+            --template-file resources/s3_zip.yml \
             --capabilities CAPABILITY_NAMED_IAM
+
+      - name: Install dependencies in imageConverter
+        run: |
+          cd imageConverter
+          npm install
+
+      - name: Create .zip archive of imageConverter folder
+        run: |
+          zip -r imageConverter.zip imageConverter/*
+
+      - name: Upload .zip archive to S3
+        run: |
+          aws s3 cp imageConverter.zip s3://lambdaCodePrjctr1/repoZip/
