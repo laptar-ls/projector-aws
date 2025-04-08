@@ -19,7 +19,7 @@ jobs:
           aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws configure set default.region eu-central-1
 
-      - name: Deploy CloudFormation Stack
+      - name: Deploy CloudFormation Stack s3 zip
         run: |
           aws cloudformation deploy \
             --stack-name s3zip \
@@ -38,3 +38,10 @@ jobs:
       - name: Upload .zip archive to S3
         run: |
           aws s3 cp imageConverter.zip s3://lambda-code-prjctr1/repo-zip/
+
+      - name: Deploy CloudFormation Stack s3 lambda
+        run: |
+          aws cloudformation deploy \
+            --stack-name s3lambda \
+            --template-file resources/s3_lambda.yml \
+            --capabilities CAPABILITY_NAMED_IAM

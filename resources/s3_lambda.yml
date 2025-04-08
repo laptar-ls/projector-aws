@@ -10,7 +10,7 @@ Parameters:
     Default: lambda-code-prjctr1
   LambdaCodeS3Key:
     Type: String
-    Default: repo-zip
+    Default: repo-zip/imageConverter.zip
 
 Resources:
   ImageBucket:
