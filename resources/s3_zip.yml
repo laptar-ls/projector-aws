@@ -5,7 +5,7 @@ Parameters:
 
   LambdaCodeS3Bucket:
     Type: String
-    Default: lambdaCodePrjctr1
+    Default: lambda-code-prjctr1
 
 
 Resources:

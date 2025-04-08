@@ -4,13 +4,13 @@ Description: Lambda function that processes image files uploaded to an S3 bucket
 Parameters:
   BucketName:
     Type: String
-    Default: imagesPrjctr1
+    Default: images-prjctr1
   LambdaCodeS3Bucket:
     Type: String
-    Default: lambdaCodePrjctr1
+    Default: lambda-code-prjctr1
   LambdaCodeS3Key:
     Type: String
-    Default: repoZip
+    Default: repo-zip
 
 Resources:
   ImageBucket:

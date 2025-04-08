@@ -37,4 +37,4 @@ jobs:
 
       - name: Upload .zip archive to S3
         run: |
-          aws s3 cp imageConverter.zip s3://lambdaCodePrjctr1/repoZip/
+          aws s3 cp imageConverter.zip s3://lambda-code-prjctr1/repo-zip/
