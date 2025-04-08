@@ -17,11 +17,11 @@ Resources:
     Type: AWS::S3::Bucket
     Properties:
       BucketName: !Ref BucketName
-#      NotificationConfiguration:
-#        LambdaConfigurations:
-#          - Event: s3:ObjectCreated:*
-#            Function: !GetAtt ImageProcessingFunction.Arn
-#    DependsOn: ImageProcessingFunction
+      NotificationConfiguration:
+        LambdaConfigurations:
+          - Event: s3:ObjectCreated:*
+            Function: !GetAtt ImageProcessingFunction.Arn
+    DependsOn: ImageProcessingFunction
 
   LambdaExecutionRole:
     Type: AWS::IAM::Role
@@ -42,7 +42,7 @@ Resources:
     Type: AWS::Lambda::Function
     Properties:
       FunctionName: ImageProcessingFunction
-      Handler: app.handler
+      Handler: index.handler
       Runtime: nodejs22.x
       Role: !GetAtt LambdaExecutionRole.Arn
       Timeout: 15
