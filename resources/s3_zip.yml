@@ -2,9 +2,6 @@ AWSTemplateFormatVersion: '2010-09-09'
 Description: S3 bucket for lambda code
 
 Parameters:
-  BucketName:
-    Type: String
-    Default: images-prjctr1
   LambdaCodeS3Bucket:
     Type: String
     Default: lambda-code-prjctr1
@@ -16,7 +13,3 @@ Resources:
     Properties:
       BucketName: !Ref LambdaCodeS3Bucket
 
-  ImageBucket:
-    Type: AWS::S3::Bucket
-    Properties:
-      BucketName: !Ref BucketName

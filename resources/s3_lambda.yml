@@ -13,14 +13,14 @@ Parameters:
     Default: repo-zip/imageConverter.zip
 
 Resources:
-  ExistingImageBucket:
+  ImageBucket:
     Type: AWS::S3::Bucket
     Properties:
       BucketName: !Ref BucketName
-      NotificationConfiguration:
-        LambdaConfigurations:
-          - Event: s3:ObjectCreated:*
-            Function: !GetAtt ImageProcessingFunction.Arn
+#      NotificationConfiguration:
+#        LambdaConfigurations:
+#          - Event: s3:ObjectCreated:*
+#            Function: !GetAtt ImageProcessingFunction.Arn
 
   LambdaExecutionRole:
     Type: AWS::IAM::Role
@@ -59,7 +59,7 @@ Resources:
       FunctionName: !Ref ImageProcessingFunction
       Action: lambda:InvokeFunction
       Principal: s3.amazonaws.com
-      SourceArn: !GetAtt ExistingImageBucket.Arn
+      SourceArn: !GetAtt ImageBucket.Arn
 
 Outputs:
   LambdaFunctionArn:
