@@ -3,7 +3,7 @@ import sharp from "sharp";
 import path from "path";
 
 // AWS SDK v3 клієнт
-const s3 = new S3Client({ region: process.env.AWS_REGION });
+const s3 = new S3Client({ region: 'eu-central-1' });
 
 export const handler = async (event) => {
   try {
