@@ -21,6 +21,7 @@ Resources:
         LambdaConfigurations:
           - Event: s3:ObjectCreated:*
             Function: !GetAtt ImageProcessingFunction.Arn
+    DependsOn: ImageProcessingFunction
 
   LambdaExecutionRole:
     Type: AWS::IAM::Role

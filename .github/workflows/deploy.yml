@@ -19,25 +19,25 @@ jobs:
           aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws configure set default.region eu-central-1
 
-      - name: Deploy CloudFormation Stack s3 zip
-        run: |
-          aws cloudformation deploy \
-            --stack-name s3zip \
-            --template-file resources/s3_zip.yml \
-            --capabilities CAPABILITY_NAMED_IAM
-
-      - name: Install dependencies in imageConverter
-        run: |
-          cd imageConverter
-          npm install
-
-      - name: Create .zip archive of imageConverter folder
-        run: |
-          zip -r imageConverter.zip imageConverter/*
-
-      - name: Upload .zip archive to S3
-        run: |
-          aws s3 cp imageConverter.zip s3://lambda-code-prjctr1/repo-zip/
+#      - name: Deploy CloudFormation Stack s3 zip
+#        run: |
+#          aws cloudformation deploy \
+#            --stack-name s3zip \
+#            --template-file resources/s3_zip.yml \
+#            --capabilities CAPABILITY_NAMED_IAM
+#
+#      - name: Install dependencies in imageConverter
+#        run: |
+#          cd imageConverter
+#          npm install
+#
+#      - name: Create .zip archive of imageConverter folder
+#        run: |
+#          zip -r imageConverter.zip imageConverter/*
+#
+#      - name: Upload .zip archive to S3
+#        run: |
+#          aws s3 cp imageConverter.zip s3://lambda-code-prjctr1/repo-zip/
 
       - name: Deploy CloudFormation Stack s3 lambda
         run: |
