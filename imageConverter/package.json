@@ -1,0 +1,16 @@
+{
+  "name": "imageconverter",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.516.0",
+    "sharp": "^0.32.1"
+  }
+}
