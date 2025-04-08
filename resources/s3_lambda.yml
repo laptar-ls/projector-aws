@@ -61,7 +61,6 @@ Resources:
       Action: lambda:InvokeFunction
       Principal: s3.amazonaws.com
       SourceArn: !GetAtt ImageBucket.Arn
-    DependsOn: ImageProcessingFunction
 
 Outputs:
   LambdaFunctionArn:
