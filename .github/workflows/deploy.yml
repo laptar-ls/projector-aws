@@ -22,7 +22,7 @@ jobs:
       - name: Deploy CloudFormation Stack
         run: |
           aws cloudformation deploy \
-            --stack-name s3_zip \
+            --stack-name s3zip \
             --template-file resources/s3_zip.yml \
             --capabilities CAPABILITY_NAMED_IAM
 
