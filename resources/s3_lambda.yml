@@ -13,7 +13,7 @@ Parameters:
     Default: repo-zip/imageConverter.zip
 
 Resources:
-  ImageBucket:
+  ExistingImageBucket:
     Type: AWS::S3::Bucket
     Properties:
       BucketName: !Ref BucketName
@@ -60,7 +60,6 @@ Resources:
       Action: lambda:InvokeFunction
       Principal: s3.amazonaws.com
       SourceArn: !GetAtt ImageBucket.Arn
-    DependsOn: ImageProcessingFunction
 
 Outputs:
   LambdaFunctionArn:
