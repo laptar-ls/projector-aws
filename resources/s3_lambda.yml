@@ -21,7 +21,6 @@ Resources:
         LambdaConfigurations:
           - Event: s3:ObjectCreated:*
             Function: !GetAtt ImageProcessingFunction.Arn
-    DependsOn: S3EventPermission
 
   LambdaExecutionRole:
     Type: AWS::IAM::Role
@@ -61,6 +60,7 @@ Resources:
       Action: lambda:InvokeFunction
       Principal: s3.amazonaws.com
       SourceArn: !GetAtt ImageBucket.Arn
+    DependsOn: ImageProcessingFunction
 
 Outputs:
   LambdaFunctionArn:
