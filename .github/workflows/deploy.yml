@@ -31,9 +31,11 @@ jobs:
           cd imageConverter
           npm install
 
-      - name: Create .zip archive of imageConverter folder
+      - name: Create .zip archive of imageConverter content
         run: |
-          zip -r imageConverter.zip imageConverter/*
+          cd imageConverter
+          zip -r ../imageConverter.zip *
+          cd ..
 
       - name: Upload .zip archive to S3
         run: |
