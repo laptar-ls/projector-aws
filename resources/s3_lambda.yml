@@ -17,11 +17,11 @@ Resources:
     Type: AWS::S3::Bucket
     Properties:
       BucketName: !Ref BucketName
-      NotificationConfiguration:
-        LambdaConfigurations:
-          - Event: s3:ObjectCreated:*
-            Function: !GetAtt ImageProcessingFunction.Arn
-    DependsOn: ImageProcessingFunction
+#      NotificationConfiguration:
+#        LambdaConfigurations:
+#          - Event: s3:ObjectCreated:*
+#            Function: !GetAtt ImageProcessingFunction.Arn
+#    DependsOn: ImageProcessingFunction
 
   LambdaExecutionRole:
     Type: AWS::IAM::Role
