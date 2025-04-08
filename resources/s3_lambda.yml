@@ -15,6 +15,7 @@ Parameters:
 Resources:
   ImageBucket:
     Type: AWS::S3::Bucket
+    DependsOn: S3EventPermission
     Properties:
       BucketName: !Ref BucketName
       NotificationConfiguration:
@@ -64,7 +65,7 @@ Resources:
       FunctionName: !Ref ImageProcessingFunction
       Action: lambda:InvokeFunction
       Principal: s3.amazonaws.com
-      SourceArn: !GetAtt ImageBucket.Arn
+      SourceArn: !Sub arn:aws:s3:::${BucketName}
 
 Outputs:
   LambdaFunctionArn:
